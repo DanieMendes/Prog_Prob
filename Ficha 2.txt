@@ -1,0 +1,487 @@
+#### Escreva uma função que receba o número de dados e o número de faces de cada dado e imprima o histograma relativo a 10,000 lançamentos. Represente o histograma para os seguintes valores: 5d2; 2d5; 4d6; 2d100; 100d2;
+
+
+var dado = repeat (10, function () {
+  return 1/10
+})
+                   
+var F = function(ind,valor) {return (ind+1)*valor}                   
+
+var t = function () {
+  return sum (mapIndexed (F, multinomial({ps: dado, n:5})))
+}
+
+viz(repeat(10000,t))
+
+
+#### Crie uma nova função onde os dados repetidos são removidos
+
+var dado = repeat (10, function () {
+  return 1/10
+})
+                   
+var F = function(ind,valor) {return (ind+1)*valor}                   
+
+var mult = multinomial({ps: dado, n:5})
+
+var remove = map (function (x) {if (x>1) {return 1} else {return x}},mult)
+
+remove
+
+
+#### Crie uma função para o sistema Roll & Keep. Represente o histograma para 1k1; 3k1; 5k1; 7k2; 9k4
+
+
+// Lançar n dados e devolver o valor que saiu em cada lançamento
+
+var acc=0
+var t=[]
+
+var dado = function (n,acc,t) {  
+  if (n>0) {
+  var r=randomInteger(10)+1
+  //console.log(r)
+     if (r==10) {
+       var acc= acc+10
+       return dado(n,acc)
+  }
+     else {
+       var t=[acc+r].concat(t)
+       //console.log(t)
+       var acc=0
+       //console.log(acc)
+       return dado(n-1,acc,t)
+  }
+}
+else {
+    return t
+  }  
+}
+
+// Criar o rool_Keep
+var rool_keep= function ([x,y]) {
+  var dados = dado (x+y,acc)
+  //console.log(dados)
+  var dad = remove(null,dados)
+  //console.log(dad)
+  var list = sort(dad,gt).slice(0,x)
+  //console.log(list)
+  return sum(list)
+}
+
+// criar os jogadores
+
+var jogador1 =[1,1]
+var jogador2 =[3,1]
+var jogador3 =[5,1]
+var jogador4 =[7,2]
+var jogador5 =[9,4]
+
+// Criar os histogramas
+
+var prob = function () {
+  console.log("1k1")
+  return rool_keep (jogador1)
+}
+var prob1 = function () {
+    console.log("3k1")
+  return rool_keep (jogador2)
+}
+var prob2 = function () {
+    console.log("5k1")
+  return rool_keep (jogador3)
+}
+var prob3 = function () {
+    console.log("7k2")
+  return rool_keep (jogador4)
+}
+var prob4 = function () {
+    console.log("9k4")
+  return rool_keep (jogador5)
+}
+
+viz(repeat(10000,prob))
+viz(repeat(10000,prob1))
+viz(repeat(10000,prob2))
+viz(repeat(10000,prob3))
+viz(repeat(10000,prob4))
+
+
+#### Crie uma função para o sistema WoD. Represente o histograma do nº de sucessos para vários nºs de dados e TN;
+
+// Lançar n dados e devolver o valor que saiu em cada lançamento
+
+var acc=0
+var t=[]
+
+var dado = function (n,acc,t) {  
+  if (n>0) {
+  var r=randomInteger(10)+1
+  //console.log(r)
+     if (r==10) {
+       var acc= acc+10
+       return dado(n,acc)
+  }
+     else {
+       var t=[acc+r].concat(t)
+       //console.log(t)
+       var acc=0
+       //console.log(acc)
+       return dado(n-1,acc,t)
+  }
+}
+else {
+    return t
+  }  
+}
+
+// Criar o WoD
+
+var con=0
+var WoD= function (x,TN) {
+  var dados = dado (x,acc)
+  //console.log(dados)
+  var dad = remove(null,dados)
+  //console.log(dad)
+  var succ = sum(map(function(y){if(y>=TN) {return 1} else {return 0}}, dad))
+  var frac = sum(map(function(y){if(y==1) {return 1} else {return 0}}, dad))
+  //console.log(succ)
+  //console.log(frac)
+  return succ-frac
+}
+
+// criar os jogadores
+
+var jogador1 =1
+var jogador2 =2
+var jogador3 =3
+var jogador4 =4
+var jogador5 =5
+var jogador6 =6
+var jogador7 =7
+var jogador8 =8
+var jogador9 =9
+var jogador10 =10
+
+// Criar o hist
+//Fixa-se o nº de dados e o TN (por exemplo 5 e 6)
+
+var hist = function () {
+  console.log("Dados: ", jogador5," e o TN é 5")
+  return WoD(jogador5, 6)
+}
+
+viz(repeat(1000,hist))
+
+#### Represente gráficamente o nº de sucessos para os vários TN usando um heatmap quando se lançam 10 dados;
+
+// Lançar n dados e devolver o valor que saiu em cada lançamento
+
+var acc=0
+var t=[]
+
+var dado = function (n,acc,t) {  
+  if (n>0) {
+  var r=randomInteger(10)+1
+  //console.log(r)
+     if (r==10) {
+       var acc= acc+10
+       return dado(n,acc)
+  }
+     else {
+       var t=[acc+r].concat(t)
+       //console.log(t)
+       var acc=0
+       //console.log(acc)
+       return dado(n-1,acc,t)
+  }
+}
+else {
+    return t
+  }  
+}
+
+// Criar o WoD
+
+var con=0
+var WoD= function (x,TN) {
+  var dados = dado (x,acc)
+  //console.log(dados)
+  var dad = remove(null,dados)
+  //console.log(dad)
+  var succ = sum(map(function(y){if(y>=TN) {return 1} else {return 0}}, dad))
+  var frac = sum(map(function(y){if(y==1) {return 1} else {return 0}}, dad))
+  //console.log(succ)
+  //console.log(frac)
+  return succ-frac
+}
+
+// Criar os jogadores
+
+var jogador1 =1
+var jogador2 =2
+var jogador3 =3
+var jogador4 =4
+var jogador5 =5
+var jogador6 =6
+var jogador7 =7
+var jogador8 =8
+var jogador9 =9
+var jogador10 =10
+
+// Criar o heatMap para 10 dados e todos os TN
+
+var w = function (jogador){
+  return [[WoD(jogador,1),1],[WoD(jogador,2),2],[WoD(jogador,3),3],[WoD(jogador,4),4],
+          [WoD(jogador,5),5],[WoD(jogador,6),6],[WoD(jogador,7),7],[WoD(jogador,8),8],
+          [WoD(jogador,9),9],[WoD(jogador,10),10]]
+}
+
+viz.heatMap(w(jogador5))
+
+
+Represente um heatmap com o nº de dados vs o nº de sucessos para o TN de 9
+
+
+// Lançar n dados e devolver o valor que saiu em cada lançamento
+
+var acc=0
+var t=[]
+
+var dado = function (n,acc,t) {  
+  if (n>0) {
+  var r=randomInteger(10)+1
+  //console.log(r)
+     if (r==10) {
+       var acc= acc+10
+       return dado(n,acc)
+  }
+     else {
+       var t=[acc+r].concat(t)
+       //console.log(t)
+       var acc=0
+       //console.log(acc)
+       return dado(n-1,acc,t)
+  }
+}
+else {
+    return t
+  }  
+}
+
+// Criar o WoD
+
+var con=0
+var WoD= function (x,TN) {
+  var dados = dado (x,acc)
+  //console.log(dados)
+  var dad = remove(null,dados)
+  //console.log(dad)
+  var succ = sum(map(function(y){if(y>=TN) {return 1} else {return 0}}, dad))
+  var frac = sum(map(function(y){if(y==1) {return 1} else {return 0}}, dad))
+  //console.log(succ)
+  //console.log(frac)
+  return succ-frac
+}
+
+// Criar os jogadores
+
+var jogador1 =1
+var jogador2 =2
+var jogador3 =3
+var jogador4 =4
+var jogador5 =5
+var jogador6 =6
+var jogador7 =7
+var jogador8 =8
+var jogador9 =9
+var jogador10 =10
+
+// Criar o heatMap para os 10 dados e TN = 9
+
+var w = function (){
+  return [[WoD(jogador1,9),1],[WoD(jogador2,9),2],[WoD(jogador3,9),3],[WoD(jogador4,9),4],
+          [WoD(jogador5,9),5],[WoD(jogador6,9),6],[WoD(jogador7,9),7],[WoD(jogador8,9),8],
+          [WoD(jogador9,9),9],[WoD(jogador10,9),10]]
+}
+
+viz.heatMap(w())
+
+
+Represente graficamente contested rolls de Roll & Keep; veja o impacto dos Traits e Skills;
+
+
+// Lançar n dados e devolver o valor que saiu em cada lançamento
+
+var acc=0
+var t=[]
+
+var dado = function (n,acc,t) {  
+  if (n>0) {
+  var r=randomInteger(10)+1
+  //console.log(r)
+     if (r==10) {
+       var acc= acc+10
+       return dado(n,acc)
+  }
+     else {
+       var t=[acc+r].concat(t)
+       //console.log(t)
+       var acc=0
+       //console.log(acc)
+       return dado(n-1,acc,t)
+  }
+}
+else {
+    return t
+  }  
+}
+
+// Criar o roll_Keep
+var roll_keep= function ([x,y]) {
+  var dados = dado (x+y,acc)
+  //console.log(dados)
+  var dad = remove(null,dados)
+  //console.log(dad)
+  var list = sort(dad,gt).slice(0,x)
+  //console.log(list)
+  return sum(list)
+}
+
+// Contested roll_keep
+
+var contest = function ([x,y],[t,s]) {
+  var j1=roll_keep([x,y])
+  //console.log("Pontos do j1: ",j1)
+  var j2=roll_keep ([t,s])
+  //console.log("Pontos do j2: ",j2)
+ /*if (j1>j2) {
+    //console.log("O jogador j1 ganhou")
+  }
+  else {
+    //console.log("O jogador j2 ganhou")
+  }*/
+  return j1/j2
+}
+
+// criar os jogadores
+
+var jogador1 =[1,1]
+var jogador2 =[3,1]
+var jogador3 =[5,1]
+var jogador4 =[7,2]
+var jogador5 =[9,4]
+
+// Verificar o impacto das trait,skills
+
+var jogador6 =[3,2]
+var jogador7 =[2,3]
+
+var prob = function () {
+  return contest (jogador6,jogador7)
+}
+
+var prob2 = function () {
+  return contest(jogador7,jogador6)
+}
+
+viz(repeat(1000,prob)) 
+viz(repeat(1000,prob2))
+// Pela analise dos graficos (principalemnte o segundo) percebemos que o jogador 1
+//tem mais probabilidade de ganhar, ou seja, trait é melhor do que skill
+
+
+Represente graficamente contested rolls de WoD; veja o impacto no nº de dados.
+
+// Lançar n dados e devolver o valor que saiu em cada lançamento
+
+var acc=0
+var t=[]
+
+var dado = function (n,acc,t) {  
+  if (n>0) {
+  var r=randomInteger(10)+1
+  //console.log(r)
+     if (r==10) {
+       var acc= acc+10
+       return dado(n,acc)
+  }
+     else {
+       var t=[acc+r].concat(t)
+       //console.log(t)
+       var acc=0
+       //console.log(acc)
+       return dado(n-1,acc,t)
+  }
+}
+else {
+    return t
+  }  
+}
+
+// Criar o WoD
+
+var con=0
+var WoD= function (x,TN) {
+  var dados = dado (x,acc)
+  //console.log(dados)
+  var dad = remove(null,dados)
+  //console.log(dad)
+  var succ = sum(map(function(y){if(y>=TN) {return 1} else {return 0}}, dad))
+  var frac = sum(map(function(y){if(y==1) {return 1} else {return 0}}, dad))
+  //console.log(succ)
+  //console.log(frac)
+  return succ-frac
+}
+
+// Criar os jogadores
+
+var jogador1 =1
+var jogador2 =2
+var jogador3 =3
+var jogador4 =4
+var jogador5 =5
+var jogador6 =6
+var jogador7 =7
+var jogador8 =8
+var jogador9 =9
+var jogador10 =10
+
+// Criar contested WoD
+var margem = 2
+var TN = 5
+var contested = function (jogad,player,margem,TN){
+  var j1=WoD(jogad,TN)
+   //console.log(j1)
+  var j2=WoD(player,TN)
+  //console.log(j2)
+  /*if (j1>=j2+margem) { // Para saber quem ganha 
+    console.log("Ganhou o jogador 1")
+  }
+  else {
+    if (j2>=j1+margem) {
+       console.log("Ganhou o jogador 2")
+    }
+    else {
+       console.log("Empataram")
+    }
+  }*/
+  return j1/j2 // Para utilizar num grafico que mostra o impacto do numero de dados
+}
+
+// Função para ver o impacto do nº da dados
+
+var fun = function () {
+  return contested (jogador10, jogador9, margem,TN)
+}
+
+var fun2 = function () {
+  return contested (jogador10, jogador4, margem,TN)
+}
+
+viz(repeat(100000,fun))
+viz(repeat(100000,fun2)) 
+
+// a conclusão é que o nº de dados influencia obviamente mas o efeito que se nota não é tao
+// evidente como no roll & keep. Entre dois nº consecutivos (por 9 e 10) o jogador que tem 10
+// 10 dados tem vantagem mas não tanto como inicialmente se poderia pensar

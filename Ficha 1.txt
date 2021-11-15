@@ -1,0 +1,206 @@
+Exercício 1
+
+Exercicio 1.1
+
+var moeda = function () {
+  return flip()
+}
+
+var list = repeat (5, moeda)
+
+console.log(list)
+
+
+var conta = function (x,acc) {
+  if (x) {
+    return acc+1
+  }
+    else {
+      return acc
+  }
+}
+
+reduce(conta, 0, list)
+
+Exercício 1.2 
+
+var moeda = function () {
+  return flip()
+}
+
+var n = 2
+var list = repeat (n, moeda)
+console.log(list)
+
+var todos = function (n,r) {
+  if (n==r) {
+    return 1
+  }
+  else {
+    return 0;
+  }
+}
+
+var conta = function (x,acc) {
+  if (x) {
+    return acc
+  }
+   else {
+      return acc+1
+  }
+}
+
+todos (n,reduce(conta, 0, list))
+
+Exercício 1.3
+
+var moeda = function () {
+  return flip()
+}
+
+var n = 2
+var list = repeat (n, moeda)
+console.log(list)
+
+var todos = function (n,r) {
+  if (n==r) {
+    return 0
+  }
+  else {
+    return 1;
+  }
+}
+
+var conta = function (x,acc) {
+  if (x) {
+    return acc
+  }
+   else {
+      return acc+1
+  }
+}
+
+todos (n,reduce(conta, 0, list))
+
+Exercicio 2
+
+var moeda = function () {
+  if (flip()) {
+    return "cara"} 
+  else { 
+    return "coroa"}
+}
+var lista1 = repeat (1000, moeda) //criar um lançamento de uma moeda
+
+viz(lista1)
+
+Exercicio 3
+
+var make_coin = function (prob) {
+  return function () {
+    return flip(prob)
+  }
+}
+
+var moeda1 = make_coin(0.7)
+
+var lista1 = repeat (10000, moeda1) //criar um lançamento de uma moeda
+
+viz(lista1)
+
+Exercicio 4 
+
+var moedas = function(){
+  var moeda1 = flip(0.2)
+  var moeda2 = flip(0.2)
+  var moeda3 = flip(0.2)
+  var moeda4 = flip(0.2)
+  var moeda5 = flip(0.2)
+  return moeda1 + moeda2 + moeda3 + moeda4 + moeda5
+}
+
+viz(Infer(moedas))
+
+viz(Binomial({p: 0.2, n: 5}))
+
+Exercicio 5
+
+var dado = function () {
+  return randomInteger (6) +1
+}
+  
+var modelo = function () {  
+  var d1 = dado ()
+  return d1 
+}
+viz(Infer(modelo))
+
+Exercicio 6
+
+var dado = function () {
+  return randomInteger (6) +1
+}
+  
+var modelo = function () {  
+  var d1 = dado ()
+  var d2 = dado ()
+  return d1+d2
+}
+viz(Infer(modelo))
+
+Exercicio 7
+
+var ouros = ["Ouros","Ouros","Ouros","Ouros","Ouros","Ouros","Ouros","Ouros","Ouros","Ouros","Ouros","Ouros","Ouros"]
+var copas = ["Copas","Copas","Copas","Copas","Copas","Copas","Copas","Copas","Copas","Copas","Copas","Copas","Copas","Copas"]
+var espadas = ["Espadas","Espadas","Espadas","Espadas","Espadas","Espadas","Espadas","Espadas","Espadas","Espadas","Espadas","Espadas"]
+var paus = ["Paus","Paus","Paus","Paus","Paus","Paus","Paus","Paus","Paus","Paus","Paus","Paus","Paus"]
+var joker = ["JK","JK"]
+
+var valor = ["Às_","2_","3_","4_","5_","6_","7_","8_","9_","10_","Q_","J_","K_"] 
+
+var simbolo = ouros.concat(copas).concat(espadas).concat(paus).concat(joker)
+var valores = valor.concat(valor).concat(valor).concat(valor).concat(["_","_"])
+
+var x = randomInteger (52) 
+var y = randomInteger (52) 
+
+console.log(valores[y])
+console.log(simbolo[x])
+
+simbolo
+
+Exercicio 8
+
+var ouros = ["Ouros","Ouros","Ouros","Ouros","Ouros","Ouros","Ouros","Ouros","Ouros","Ouros","Ouros","Ouros","Ouros"]
+var copas = ["Copas","Copas","Copas","Copas","Copas","Copas","Copas","Copas","Copas","Copas","Copas","Copas","Copas","Copas"]
+var espadas = ["Espadas","Espadas","Espadas","Espadas","Espadas","Espadas","Espadas","Espadas","Espadas","Espadas","Espadas","Espadas"]
+var paus = ["Paus","Paus","Paus","Paus","Paus","Paus","Paus","Paus","Paus","Paus","Paus","Paus","Paus"]
+var joker = ["JK","JK"]
+
+var valor = ["Às_","2_","3_","4_","5_","6_","7_","8_","9_","10_","Q_","J_","K_"] 
+
+var simbolo = ouros.concat(copas).concat(espadas).concat(paus).concat(joker)
+var valores = valor.concat(valor).concat(valor).concat(valor).concat(["_","_"])
+
+var baralho = zip(valores,simbolo)
+
+baralho
+
+var t=54
+var n=5
+
+var sorteia = function (baralho,n,t) {
+  if(n>0) {
+  var r=randomInteger(t)
+  var carta =baralho[r]
+  console.log(baralho[r])
+  var tres=remove(baralho[r], baralho)
+  //console.log(baralho)
+  return sorteia (tres,n-1,t-1)
+  }
+  if(n==0) {
+    return console.log("esta é a mão de cartas")
+  }
+}
+
+sorteia (baralho,5,t)
