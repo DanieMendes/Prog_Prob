@@ -1,0 +1,112 @@
+#### 1. Assuma que 1% da população tem COVID. Dos que têm COVID, 70% tem um teste rápido positivo mas 10% das pessoas que não têm COVID tem um teste rápido positivo. Imprima o histograma correspondente aos positivos;
+
+var modelo = function () { // Modelo para saber qual a percentagem de pessoas que da positivo
+                           // sabendo que tem covid
+var covid = flip(0.01)
+var posA = covid ? flip(0.7) : flip (0.1)
+
+condition (covid)
+
+return posA
+}
+
+var modelo1 = function () { // Modelo para saber qual a percentagem de pessoas que tem covid
+                           // sabendo que tem da positvo no teste
+var covid = flip(0.01)
+var posA = covid ? flip(0.7) : flip (0.1)
+
+condition (posA)
+
+return covid
+}
+
+console.log("Sabendo que tem covid qual a probabilidade de dar positivo")
+viz(Infer(modelo)) 
+console.log("Sabendo que tem teste positivo qual a probabilidade de ter covid")
+viz(Infer(modelo1))
+
+
+#### Assuma agora que existe o teste B (em oposição ao teste A referido acima) em que 90% das pessoas com COVID tem um teste positivo enquanto que só 1% das pessoas sem COVID tem um teste positivo. Assuma também que das pessoas que ligam para o Saúde24, 80% das pessoas fizeram o teste A e as restantes fizeram o teste B. Imprima o histograma correspondente aos positivos.
+
+
+var modelo = function () {
+  
+var covid = flip(0.01)
+var posA = covid ? flip(0.7) : flip (0.1)
+var posB = covid ? flip(0.9) : flip (0.01)
+var pos = flip(0.8) ? posA : posB
+
+return pos
+}
+
+viz(Infer(modelo))
+
+
+#### Calcule p(COVID|positivo) para a pergunta 1 da ficha 3;
+
+
+var modelo = function () {
+  
+var covid = flip(0.01)
+var posA = covid ? flip(0.7) : flip (0.1)
+  
+condition (posA)
+  
+return covid
+}
+
+viz.table(Infer(modelo))
+
+
+#### Se tiver um teste positivo para a pergunta 2 da ficha 3, calcule:
+I. A probabilidade de ter COVID;
+
+
+var modelo = function () {
+  
+var covid = flip(0.01)
+var posA = covid ? flip(0.7) : flip (0.1)
+var posB = covid ? flip(0.9) : flip (0.01)
+var pos = flip(0.8) ? posA : posB
+
+condition (pos)
+  
+return covid
+}
+
+viz.table(Infer(modelo))
+
+
+II. A probabilidade de ter feito o teste A;
+
+var modelo = function () {
+  
+var covid = flip(0.01)
+var posA = covid ? flip(0.7) : flip (0.1)
+var posB = covid ? flip(0.9) : flip (0.01)
+var testeA = flip(0.8)
+var pos = testeA ? posA : posB
+
+condition (pos)
+return testeA
+}
+
+viz.table(Infer(modelo))
+
+
+III. A probabilidade de ter feito o teste A com teste positivo e COVID;
+
+var modelo = function () {
+  
+var covid = flip(0.01)
+var posA = covid ? flip(0.7) : flip (0.1)
+var posB = covid ? flip(0.9) : flip (0.01)
+var testeA = flip(0.8) 
+var pos = testeA ? posA : posB
+
+condition (pos && covid) // Teste positivo e covid 
+  
+return testeA
+}
+
+viz.table(Infer(modelo))
